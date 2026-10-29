@@ -1,0 +1,300 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNIg1y9SXr64RsHjs6kuUMg",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/holmanben761-cpu/Quant-Probability-Simulations/blob/main/Basic%20Probability%20Quant%20Problems\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#random card generator\n",
+        "\n",
+        "import random\n",
+        "\n",
+        "suits = ['diamonds', 'clubs', 'hearts', 'spades']\n",
+        "numbers = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king']\n",
+        "\n",
+        "#makes a deck, shuffles it and takes the bottom card\n",
+        "class Deck:\n",
+        "  def __init__(self):\n",
+        "    self.cards = [(number, suit) for number in numbers for suit in suits]\n",
+        "\n",
+        "  def shuffle(self):\n",
+        "    random.shuffle(self.cards)\n",
+        "\n",
+        "  def draw(self):\n",
+        "    return self.cards.pop()\n",
+        "\n",
+        "  def empty(self):\n",
+        "    return self.cards == []\n",
+        "\n",
+        "deck = Deck()\n",
+        "deck.shuffle()\n",
+        "\n",
+        "card = deck.draw()\n",
+        "print(card[0] + \" of \" + card[1])\n",
+        "\n",
+        "#fair dice roll\n",
+        "\n",
+        "\n",
+        "class Dice:\n",
+        "    def __init__(self, n=6):\n",
+        "        self.sides = list(range(1, n + 1))\n",
+        "\n",
+        "    def roll(self):\n",
+        "        return random.choice(self.sides)\n",
+        "\n",
+        "dice = Dice(6)\n",
+        "print(dice.roll())\n",
+        "\n",
+        "#coin flip\n",
+        "\n",
+        "class Coin:\n",
+        "  def __init__(self, p = 1/2):\n",
+        "    self.side = ['heads', 'tails']\n",
+        "    self.p = p\n",
+        "  def flip(self):\n",
+        "        if random.random() < self.p:\n",
+        "            return 'heads'\n",
+        "        return 'tails'\n",
+        "\n",
+        "coin = Coin(1/2)\n",
+        "print(coin.flip())\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "EU04jLUaUr6K",
+        "outputId": "8808ba7f-3ef4-4f04-827c-a6286ed80959"
+      },
+      "execution_count": 60,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "4 of spades\n",
+            "1\n",
+            "tails\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#race to the ace\n",
+        "#amount of draws until we see the first ace\n",
+        "\n",
+        "def simulation():\n",
+        "  deck = Deck()\n",
+        "  deck.shuffle()\n",
+        "  drawn_cards = 0\n",
+        "\n",
+        "  while not deck.empty():\n",
+        "    card = deck.draw()\n",
+        "    drawn_cards += 1\n",
+        "    if card[0] == 'ace':\n",
+        "      return drawn_cards\n",
+        "\n",
+        "results = [simulation() for _ in range(100000)]\n",
+        "print(sum(results) / len(results))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "whTgtoLOXWjM",
+        "outputId": "eb7536e6-43f2-48bd-f842-10404465b5dd"
+      },
+      "execution_count": 61,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "10.61527\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#highest roll evaluation\n",
+        "#Jim will roll a fair, six-sided die until he gets a 4. What is the expected value of the highest number he rolls through this process?\n",
+        "\n",
+        "\n",
+        "def simulation():\n",
+        "  dice = Dice(6)\n",
+        "  rolled_four = False\n",
+        "  highest_number = 0\n",
+        "\n",
+        "  while rolled_four == False:\n",
+        "    roll = dice.roll()\n",
+        "    if roll > highest_number:\n",
+        "      highest_number = roll\n",
+        "    if roll == 4:\n",
+        "      rolled_four = True\n",
+        "      return highest_number\n",
+        "\n",
+        "results = [simulation() for _ in range(100000)]\n",
+        "print(sum(results) / len(results))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "DdlrqaFabP7I",
+        "outputId": "c9d679bd-995f-48f4-b438-33b429a95f89"
+      },
+      "execution_count": 62,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "5.16698\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#race to 7 heads\n",
+        "#Stefan flips a coin 100 times. What is the probability there are 7 heads in a row\n",
+        "\n",
+        "def simulation():\n",
+        "  coin = Coin(1/2)\n",
+        "  head_streak = 0\n",
+        "  max_head_streak = 0\n",
+        "\n",
+        "\n",
+        "  for _ in range(100):\n",
+        "    side = coin.flip()\n",
+        "\n",
+        "    if side == 'heads':\n",
+        "      head_streak += 1\n",
+        "\n",
+        "    if side == 'tails':\n",
+        "      head_streak = 0\n",
+        "\n",
+        "    if head_streak > max_head_streak:\n",
+        "      max_head_streak = head_streak\n",
+        "\n",
+        "    if max_head_streak >= 7:\n",
+        "      return 1\n",
+        "\n",
+        "  return 0\n",
+        "\n",
+        "\n",
+        "results = [simulation() for _ in range (100000)]\n",
+        "print(sum(results) / len(results))\n",
+        "\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "9_PVFbTceWyt",
+        "outputId": "5f2eeb0c-3e3b-4608-bb1e-dce3b42c8e76"
+      },
+      "execution_count": 63,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "0.31718\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#expected number of consecutive flips\n",
+        "#a coin is flipped 100 times. What is the expected number of the the longest consecutive flip chain\n",
+        "\n",
+        "def simulation():\n",
+        "  coin = Coin(1/2)\n",
+        "  head_streak = 0\n",
+        "  tail_streak = 0\n",
+        "  max_streak = 0\n",
+        "\n",
+        "\n",
+        "  for _ in range(100):\n",
+        "    side = coin.flip()\n",
+        "\n",
+        "    if side == 'heads':\n",
+        "      head_streak += 1\n",
+        "      tail_streak = 0\n",
+        "\n",
+        "    if side == 'tails':\n",
+        "      tail_streak += 1\n",
+        "      head_streak = 0\n",
+        "\n",
+        "    if head_streak > max_streak:\n",
+        "      max_streak = head_streak\n",
+        "\n",
+        "    if tail_streak > max_streak:\n",
+        "      max_streak = tail_streak\n",
+        "\n",
+        "  return max_streak\n",
+        "\n",
+        "results = [simulation() for _ in range (100000)]\n",
+        "print(sum(results) / len(results))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "0H8oGdVSkpDj",
+        "outputId": "8bbf2dba-686f-4a1c-8a9a-0fb69baa29e0"
+      },
+      "execution_count": 64,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "6.98575\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "HqHDFhahnxYh"
+      },
+      "execution_count": 64,
+      "outputs": []
+    }
+  ]
+}
